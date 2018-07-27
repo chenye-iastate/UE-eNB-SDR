@@ -58,19 +58,14 @@ class GLOBALS(object):
     OAI_UE_IMG  = URN.Image(PN.PNDEFS.PNET_AM, "PhantomNet:OAI-Real-Hardware.enb1")
     OAI_EPC_IMG = URN.Image(PN.PNDEFS.PNET_AM, "PhantomNet:UBUNTU16-64-OAIEPC")
     OAI_ENB_IMG = URN.Image(PN.PNDEFS.PNET_AM, "PhantomNet:OAI-Real-Hardware.enb1")
-    OAI_SIM_IMG = URN.Image(PN.PNDEFS.PNET_AM, "PhantomNet:UBUNTU14-64-OAI")
     OAI_CONF_SCRIPT = "/usr/bin/sudo /local/repository/bin/config_oai.pl"
-    SIM_HWTYPE = "d430"
     NUC_HWTYPE = "nuc5300"
     UE_HWTYPE = "nuc5300"
 
-def connectOAI_DS(node, sim):
+def connectOAI_DS(node):
     # Create remote read-write clone dataset object bound to OAI dataset
     bs = request.RemoteBlockstore("ds-%s" % node.name, "/opt/oai")
-    if sim == 1:
-	bs.dataset = GLOBALS.OAI_SIM_DS
-    else:
-	bs.dataset = GLOBALS.OAI_DS
+    bs.dataset = GLOBALS.OAI_DS
     bs.rwclone = True
 
     # Create link from node to OAI dataset rw clone
@@ -126,7 +121,7 @@ if params.FIXED_ENB:
 enb1.hardware_type = GLOBALS.NUC_HWTYPE
 enb1.disk_image = GLOBALS.OAI_ENB_IMG
 enb1.Desire( "rf-radiated" if params.TYPE == "ota" else "rf-controlled", 1 )
-connectOAI_DS(enb1, 0)
+connectOAI_DS(enb1)
 enb1.addService(rspec.Execute(shell="sh", command=GLOBALS.OAI_CONF_SCRIPT + " -r ENB"))
 enb1_rue1_rf = enb1.addInterface("rue1_rf")
 
@@ -137,7 +132,7 @@ if params.FIXED_UE:
 rue1.hardware_type = GLOBALS.UE_HWTYPE
 rue1.disk_image = GLOBALS.OAI_UE_IMG
 rue1.Desire( "rf-radiated" if params.TYPE == "ota" else "rf-controlled", 1 )
-connectOAI_DS(rue1, 0)
+connectOAI_DS(rue1)
 rue1_enb1_rf = rue1.addInterface("enb1_rf")
 
 # Create the RF link between the UE and eNodeB
@@ -152,7 +147,7 @@ epclink.addNode(enb1)
 epc = request.RawPC("epc")
 epc.disk_image = GLOBALS.OAI_EPC_IMG
 epc.addService(rspec.Execute(shell="sh", command=GLOBALS.OAI_CONF_SCRIPT + " -r EPC"))
-connectOAI_DS(epc, 0)
+connectOAI_DS(epc)
  
 epclink.addNode(epc)
 epclink.link_multiplexing = True
