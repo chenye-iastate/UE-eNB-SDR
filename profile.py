@@ -92,8 +92,8 @@ pc.defineParameter("FIXED_ENB", "Bind to a specific eNodeB",
                    longDescription="Input the name of a PhantomNet eNodeB device to allocate (e.g., 'nuc1').  Leave blank to let the mapping algorithm choose.  If you bind both UE and eNodeB devices, mapping will fail unless there is path between them via the attenuator matrix.")
 
 pc.defineParameter("TYPE", "Experiment type",
-                   portal.ParameterType.STRING,"atten",[("atten","Real UE with attenuator"),("ota","Over the air")],
-                   longDescription="*Real UE with attenuator*: Real RF devices will be connected via transmission lines with variable attenuator control. *Over the air*: Real RF devices with real antennas and transmissions propagated through free space will be selected.")
+                   portal.ParameterType.STRING,"atten",[("atten","Controlled RF connection"),("ota","Over the air")],
+                   longDescription="*Controlled RF connection*: Real RF devices will be connected via transmission lines with variable attenuator control. *Over the air*: Real RF devices with real antennas and transmissions propagated through free space will be selected.")
 
 #pc.defineParameter("RADIATEDRF", "Radiated (over-the-air) RF transmissions",
 #                   portal.ParameterType.BOOLEAN, False,
